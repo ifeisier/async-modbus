@@ -1,0 +1,29 @@
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package]
+name = "async-modbus"
+version = "0.0.1"
+edition = "2021"
+authors = ["ifeisier <ifeisier@hotmail.com>"]
+description = "在 tokio-modbus 的基础上增加了超时重发功能."
+repository = "https://github.com/ifeisier/async-modbus"
+license-file = "LICENSE"
+
+
+[dependencies]
+log = "0.4"
+anyhow = "1.0.86"
+async-trait = "0.1.80"
+
+
+tokio-serial = { version = "5.4.4", default-features = false, optional = true }
+tokio-modbus = { version = "0.11.0", default-features = false, optional = true }
+tokio = { version = "1.38.0", default-features = false, optional = true }
+
+
+[features]
+default = []
+modbus_tcp_client = ["tokio-modbus/tcp", "tokio/time"]
+modbus_tcp_server = ["tokio-modbus/tcp-server", "tokio/net"]
+modbus_rtu_client = ["tokio-modbus/rtu", "tokio-serial", "tokio/time"]
+modbus_rtu_server = ["tokio-modbus/rtu-server", "tokio-serial"]
