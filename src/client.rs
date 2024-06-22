@@ -265,6 +265,7 @@ impl Client {
                         return Ok(ResultValue::Bool(response));
                     }
                     Ok(Err(e)) => {
+                        println!("{:?}", e);
                         bail!(e)
                     }
                     Err(_) => {
