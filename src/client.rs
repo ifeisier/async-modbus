@@ -46,7 +46,7 @@ impl Client {
 
         Ok(Client {
             ctx: Box::new(ctx),
-            timeout_millis: 200,
+            timeout_millis: 500,
             retry_count: 5,
         })
     }
@@ -74,7 +74,7 @@ impl Client {
         let ctx = rtu::attach_slave(transport, Slave(slave_id));
         Ok(Client {
             ctx: Box::new(ctx),
-            timeout_millis: 200,
+            timeout_millis: 500,
             retry_count: 5,
         })
     }
