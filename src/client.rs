@@ -68,8 +68,8 @@ impl Client {
     /// - 失败: 返回错误信息
     #[cfg(feature = "modbus_rtu_client")]
     pub async fn new_rtu<T>(transport: T, slave_id: u8) -> Result<Client>
-    where
-        T: AsyncRead + AsyncWrite + Debug + Unpin + Send + 'static,
+        where
+            T: AsyncRead + AsyncWrite + Debug + Unpin + Send + 'static,
     {
         let ctx = rtu::attach_slave(transport, Slave(slave_id));
         Ok(Client {
@@ -258,21 +258,26 @@ impl Client {
                 }
                 _ => None,
             };
-            if let Some(future) = future {
-                match timeout(timeout_duration, future).await {
-                    Ok(Ok(response)) => {
-                        return Ok(ResultValue::Bool(response));
-                    }
-                    Ok(Err(e)) => {
-                        bail!(e)
-                    }
-                    Err(_) => {
-                        retry_count -= 1;
-                    }
-                }
-            } else {
-                bail!("Out of handle_timeout options range")
-            }
+
+            let xx = future.unwrap().await;
+            retry_count -= 1;
+            println!("xx: {:?}", xx.unwrap());
+
+            // if let Some(future) = future {
+            //     match timeout(timeout_duration, future).await {
+            //         Ok(Ok(response)) => {
+            //             return Ok(ResultValue::Bool(response));
+            //         }
+            //         Ok(Err(e)) => {
+            //             bail!(e)
+            //         }
+            //         Err(_) => {
+            //             retry_count -= 1;
+            //         }
+            //     }
+            // } else {
+            //     bail!("Out of handle_timeout options range")
+            // }
         }
         bail!("Timeout: deadline has elapsed")
     }
