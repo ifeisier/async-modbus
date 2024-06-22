@@ -259,25 +259,21 @@ impl Client {
                 _ => None,
             };
 
-            let xx = future.unwrap().await;
-            retry_count -= 1;
-            println!("xx: {:?}", xx.unwrap());
-
-            // if let Some(future) = future {
-            //     match timeout(timeout_duration, future).await {
-            //         Ok(Ok(response)) => {
-            //             return Ok(ResultValue::Bool(response));
-            //         }
-            //         Ok(Err(e)) => {
-            //             bail!(e)
-            //         }
-            //         Err(_) => {
-            //             retry_count -= 1;
-            //         }
-            //     }
-            // } else {
-            //     bail!("Out of handle_timeout options range")
-            // }
+            if let Some(future) = future {
+                match timeout(timeout_duration, future).await {
+                    Ok(Ok(response)) => {
+                        return Ok(ResultValue::Bool(response));
+                    }
+                    Ok(Err(e)) => {
+                        bail!(e)
+                    }
+                    Err(_) => {
+                        retry_count -= 1;
+                    }
+                }
+            } else {
+                bail!("Out of handle_timeout options range")
+            }
         }
         bail!("Timeout: deadline has elapsed")
     }
